@@ -2,14 +2,14 @@
   <div class="wrapper">
     <header>
       <div class="nav">
+        <div class="nav-item" @click="changeToLearn">
+          学习
+        </div>
         <div class="nav-item" @click="changeToAIChat">
           AI问答
         </div>
-        <div class="nav-item">
-          个性化推荐
-        </div>
         <div class="nav-item" @click="changeToStatistics">
-          学习成果分析
+          分析
         </div>
       </div>
       <div class="avatar"> 
@@ -35,6 +35,11 @@ const changeToAIChat = ()=>{
 const changeToStatistics = ()=>{
   router.push({
     name: 'statistics'
+  })
+}
+const changeToLearn = ()=>{
+  router.push({
+    name: 'learn'
   })
 }
 </script>
