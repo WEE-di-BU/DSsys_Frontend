@@ -48,25 +48,18 @@ const changeToStatistics = ()=>{
 
 header {
   height: 4em;
-  background-color: #24292f;
+  background-color: #282828;
   border-bottom: 1px solid black;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
   width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1; 
-  overflow-x: overlay;
 }
 
 .main-content {
   width: 100%;
   box-sizing: border-box;
-  padding-top: 4em;
-  height: calc(100vh-4em);
-
+  height: calc(100vh - 4em);
 }
 
 .avatar{

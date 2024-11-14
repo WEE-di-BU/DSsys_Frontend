@@ -9,18 +9,29 @@
                 </el-input>
             </div>
         </div>
-        <div id="ub" class="charts">
-
+        <div class="ub-outer">
+            <div class="left">
+                <div class="selection" @click="changeToAlgos">ALGO</div>
+                <div class="selection" @click="changeToDS">DS</div>
+            </div>
+            <div id="ub" class="charts">
+    
+            </div>
         </div>
-        <div class="contents-card">
-            <el-card class="card" v-for="item in cardsInfo" :key="item.name" shadow="hover">
-                <div class="upper">
-                    <div class="title">
-
+        <div class="bottom">
+            <div class="mid">
+                <h2 style="font-weight: lighter;">与你类似的同学都在看</h2>
+            </div>
+            <div class="contents-card">
+                <el-card class="card" v-for="item in recommendlist" :key="item" shadow="hover" @click="addClick(item)">
+                    <div class="upper">
+                        <div class="title">
+    
+                        </div>
                     </div>
-                </div>
-                {{ item.name }}
-            </el-card>
+                    {{ item }}
+                </el-card>
+            </div>
         </div>
     </div>
 </template>
@@ -30,33 +41,48 @@ import { onMounted, ref } from 'vue';
 import * as echarts from "echarts";
 import axios from 'axios';
 let dsConcepts = [{}]
-const cardsInfo = ref([
-    {
-        name: '123'
-    },
-    {
-        name: '123'
-    },
-    {
-        name: '1423'
-    }
-])
+const recommendlist = ref([])
 onMounted(async () => {
+    await getAlgorithims();  
     const ubchart = document.getElementById("ub")
     if (ubchart) {
         ubchart.removeAttribute('_echarts_instance_');
     }
     await initChart1()
+    await getRecommend()
 })
 const getDatastructures = async () => {
+    await axios.get('http://127.0.0.1:5000/api/ds').then((resp) => {
+        dsConcepts = resp.data
+        console.log(dsConcepts)
+    })
+}
+
+const getAlgorithims = async()=>{
     await axios.get('http://127.0.0.1:5000/api/algos').then((resp) => {
         dsConcepts = resp.data
         console.log(dsConcepts)
     })
 }
+
 async function initChart1() {
-    await getDatastructures()
     const chart = echarts.init(document.getElementById("ub"), "light");
+    // 动态生成不同的颜色和大小
+    const getNodeStyle = (index) => {
+        // 这里可以根据节点索引或数据值来设定不同的大小和颜色
+        const colorList = ['#FF4081', '#00BCD4', '#FFEB3B', '#8BC34A', '#FF5722', '#9C27B0', '#FF9800'];
+        const sizeList = [30, 40, 50, 60];
+
+        return {
+            itemStyle: {
+                color: colorList[index % colorList.length],  // 循环使用颜色
+                shadowBlur: 10,
+                shadowColor: '#282828'
+            },
+            symbolSize: sizeList[index % sizeList.length]  // 循环使用大小
+        };
+    };
+
     chart.setOption({
         xAxis: {
             show: false
@@ -72,8 +98,8 @@ async function initChart1() {
                 type: "graph",
                 focusNodeAdjacency: true,
                 force: {
-                    repulsion: 200,
-                    edgeLength: [120, 100]
+                    repulsion: 150,
+                    edgeLength: [100, 80]
                 },
                 layout: "force",
                 symbol: 'circle',
@@ -86,75 +112,88 @@ async function initChart1() {
                         curveness: 0.5
                     }
                 },
-
                 label: {
                     normal: {
                         show: true,
-                        // 标签位置:'top''left''right''bottom''inside''insideLeft''insideRight''insideTop''insideBottom''insideTopLeft''insideBottomLeft''insideTopRight''insideBottomRight'
-                        position: "inside",
-                        // 文本样式
+                        position: "inside", // 标签位置
                         textStyle: {
-                            fontSize: 16,
+                            fontSize: 10,
                             color: 'white'
                         }
                     }
                 },
-                // 连接两个关系对象的线上的标签
                 edgeLabel: {
                     normal: {
                         show: true,
                         textStyle: {
-                            // fontSize: 14
+                            fontSize: 14
                         },
-                        // 标签内容
                         formatter: function (param) {
                             return param.data.category;
                         }
                     }
                 },
-                data: dsConcepts,
-                // 节点分类的类目，可选。如果节点有分类的话可以通过 data[i].category 指定每个节点的类目，类目的样式会被应用到节点样式上。图例也可以基于categories名字展现和筛选。
-                categories: [{
-                    // 类目名称，用于和 legend 对应以及格式化 tooltip 的内容。
-                    name: "企业分析"
-                }, {
-                    name: "入驻"
-                }, {
-                    name: "培育"
-                }, {
-                    name: "申报"
-                }, {
-                    name: "产教融合"
-                }],
-                // 节点间的关系数据
-                links: [{
-                    target: "",
-                    source: "总企业",
-                    // 关系对象连接线上的标签内容
-                    category: "入驻"
-                }, {
-                    target: "企业2",
-                    source: "总企业",
-                    category: "培育"
-                }, {
-                    target: "企业3",
-                    source: "总企业",
-                    category: "申报"
-                }, {
-                    target: "企业4",
-                    source: "总企业",
-                    category: "产教融合"
-                }]
+                data: dsConcepts.map((item, index) => {
+                    const nodeStyle = getNodeStyle(index);  // 获取每个节点的样式
+                    return {
+                        ...item,  // 保留原数据
+                        ...nodeStyle,
+                        label: {
+                            show: true,
+                            formatter: function () {
+                                return item || "-";  // 确保显示 name 字段
+                            }
+                        }// 合并样式
+                    };
+                })
             }
         ]
     });
+
     window.onresize = function () {
         chart.resize();
     };
 }
+
+
+const getRecommend = async()=>{
+    await axios.get('http://127.0.0.1:5000/api/recommends',{
+        params:{
+            id:1
+        }
+    }).then((resp)=>{
+        recommendlist.value=resp.data
+        console.log(resp.data)
+    })
+}
+const addClick = async(item:string)=>{
+    console.log(item)
+    await axios.post('http://127.0.0.1:5000/api/addclick',{id:1,concept:item}).then((resp)=>{
+        console.log(resp.data)
+    })
+}
+
+const changeToAlgos = async()=>{
+    await getAlgorithims()
+    await initChart1()
+}
+
+const changeToDS = async()=>{
+    await getDatastructures()
+    await initChart1()
+}
 </script>
 
 <style scoped>
+.ub-outer{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30em;
+    background-color: #2a2a2a;
+    position: relative;
+}
+
 .charts {
     width: 100%;
     height: 25em;
@@ -175,10 +214,12 @@ async function initChart1() {
     align-items: center;
     justify-content: center;
     width: 33.3%;
-    border: 1px solid black;
-    height: 15em;
+    height: 12em;
     border-radius: 4px;
     margin: 0 1em;
+    background-color: #282828;
+    border: none;
+    color: white;
 }
 
 .card:hover {
@@ -190,7 +231,7 @@ async function initChart1() {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: black;
+    background-color: #2a2a2a;
     height: 4em;
 }
 
@@ -201,5 +242,39 @@ async function initChart1() {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.bottom{
+    background-color: #1a1a1a;
+}
+
+.mid{
+    width: 100%;
+    height: 5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.left{
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 8em;
+    z-index: 1
+}
+
+.selection{
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.selection:hover{
+    background-color: #1a1a1a;
+    transition: 0.25s;
 }
 </style>
