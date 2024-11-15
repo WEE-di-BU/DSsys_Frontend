@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wrapper-home">
         <div class="swiper-outer">
         <swiper-container class="swiper" scrollbar="true" :autoplay="{
           delay: 2500,
@@ -36,15 +36,17 @@ import { register } from 'swiper/element/bundle';
 register();
 </script>
 <style scoped>
-.wrapper{
+.wrapper-home{
     width: 100%;
 }
 .bottom {
   width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background-color: white;
 }
 
 .up-title {

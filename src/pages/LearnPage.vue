@@ -14,23 +14,31 @@
                 <div class="selection" @click="changeToAlgos">ALGORITHM</div>
                 <div class="selection" @click="changeToDS">DATASTRUCTURE</div>
             </div>
-            <div id="ub" class="charts">
-    
-            </div>
+            <div id="ub" class="charts"></div>
         </div>
         <div class="bottom">
             <div class="mid">
-                <h2 style="font-weight: lighter;">与你类似的同学都在看</h2>
+                <h3 style="font-weight: 500;">与你类似的同学都在看</h3>
             </div>
             <div class="contents-card">
-                <el-card class="card" v-for="item in recommendlist" :key="item" shadow="hover" @click="addClick(item)">
-                    <div class="upper">
-                        <div class="title">
-    
+                <el-card class="card" v-for="item in recommendlist" :key="item.name" shadow="hover" @click="addClick(item.name)">
+                    <div style="width: 100%;height: 100%; display: flex;">
+                        <div class="c-left">
+                            <img src="">
+                        </div>
+                        <div class="c-right">
+                            <div class="title">
+                                <h3 style="font-weight: 800; margin-bottom: 1em">{{ item.name }}</h3>
+                            </div>
+                            <div class="desc">
+                                {{ item.desc }}
+                            </div>
                         </div>
                     </div>
-                    {{ item }}
                 </el-card>
+            </div>
+            <div class="rec-execise">
+                <h3 style="font-weight: 500;"> 推荐练习 </h3>
             </div>
         </div>
     </div>
@@ -252,9 +260,12 @@ const changeToDS = async()=>{
     width: 100%;
     height: 5em;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     color: white;
+    box-sizing: border-box;
+    padding-left: 3em;
+    font-size: 1em;
 }
 
 .left{
@@ -280,5 +291,24 @@ const changeToDS = async()=>{
 .selection:hover{
     background-color: #1a1a1a;
     transition: 0.25s;
+}
+
+.rec-execise{
+    color: white;
+    box-sizing: border-box;
+    padding: 0 3em;
+}
+
+.desc{
+    display: -webkit-box;
+    -webkit-box-orient: vertical; /* 设置为垂直方向 */
+    -webkit-line-clamp: 2;        /* 限制为两行 */
+    overflow: hidden;             /* 隐藏超出的文本 */
+    text-overflow: ellipsis;      /* 显示省略号 */
+    line-height: 1.5;             
+}
+
+.c-left{
+    width: 3em;
 }
 </style>
