@@ -69,7 +69,86 @@
               </div>
             </div>
           </el-dialog>
-          <el-button type="primary">注册</el-button>
+
+          <el-button type="primary" @click="registerVisible = true">注册</el-button>
+          <el-dialog
+            v-model="registerVisible"
+            width="33em"
+            style="background-color: whitesmoke"
+          >
+            <div
+              style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+              <h1 style="color: black; font-size: 2em">注册</h1>
+              <div style="font-size: 1em; color: #868484; margin-top: 10px">欢迎注册我们的学习平台，请在下方填写相关信息</div>
+            </div>
+            <div class="input-wrapper">
+              <el-form>
+                <el-form-item prop="username">
+                  <el-input maxlength="30" type="text" placeholder="用户名/邮箱">
+                    <template #prefix>
+                      <el-icon>
+                        <User/>
+                      </el-icon>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                  <el-input type="password" maxlength="20" style="margin-top: 5px" placeholder="密码">
+                    <template #prefix>
+                      <el-icon>
+                        <Lock/>
+                      </el-icon>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item prop="password_repeat">
+                  <el-input type="password" maxlength="20" style="margin-top: 5px" placeholder="重复密码">
+                    <template #prefix>
+                      <el-icon>
+                        <Lock/>
+                      </el-icon>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item prop="email">
+                  <el-input type="email" placeholder="电子邮件地址">
+                    <template #prefix>
+                      <el-icon>
+                        <Message/>
+                      </el-icon>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item prop="code">
+                  <el-row :gutter="10" style="width: 100%;">
+                    <el-col :span="18">
+                      <el-input maxlength="6" type="text" placeholder="请输入验证码">
+                        <template #prefix>
+                          <el-icon>
+                            <EditPen/>
+                          </el-icon>
+                        </template>
+                      </el-input>
+                    </el-col>
+                    <el-col :span="5">
+                      <el-button type="success">
+                        获取验证码
+                      </el-button>
+                    </el-col>
+                  </el-row>
+                </el-form-item>
+              </el-form>
+              <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <div style="margin-top: 1vw">
+                  <el-button style="width: 22vw" type="warning" plain>立即注册</el-button>
+                </div>
+                <div style="margin: 1vw 0">
+                  <span style="font-size: 1em; line-height: 15px; color: grey">已有账号?&nbsp;&nbsp;&nbsp;</span>
+                  <el-link type="primary" style="translate: 0 -2.5px">立即登录</el-link>
+                </div>
+              </div>
+            </div>
+          </el-dialog>
         </div>
         <div v-else class="avatar">
           <img src="./assets/avatae.png" alt="" style="border-radius: 10em; height: 100%; width: 100%;">
@@ -88,7 +167,7 @@ register();
 import { useRouter, useRoute } from 'vue-router';
 import { computed } from "vue";
 import { ref } from 'vue'
-import {User, Lock} from '@element-plus/icons-vue'
+import {EditPen, Lock, Message, User} from "@element-plus/icons-vue";
 
 const router = useRouter()
 const changeToAIChat = ()=>{
@@ -111,6 +190,7 @@ const route = useRoute();
 const isHomePage = computed(() => route.path === '/home')
 
 const loginVisible = ref(false)
+const registerVisible = ref(false)
 
 </script>
 
