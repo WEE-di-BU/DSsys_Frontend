@@ -246,7 +246,6 @@ import { computed } from "vue";
 import { ref } from 'vue'
 import { EditPen, Lock, Message, User } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-const show = ref(false)
 const router = useRouter()
 const changeToAIChat = () => {
   router.push({
@@ -329,7 +328,7 @@ header {
   width: 100%;
   box-sizing: border-box;
   background-color: #1a1a1a;
-  height: calc(100vh - 4em);
+  height: calc(100vh - 3.55em);
 }
 
 .avatar {
