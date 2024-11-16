@@ -2,11 +2,11 @@
     <div>
         <div class="search">
             <div class="search-main">
-                <el-input placeholder="Search Algo and DS">
+                <el-autocomplete v-model="searchText" :fetch-suggestions="fetchSuggestions" placeholder="Search Algorithm and DataStructure">
                     <template #append>
-                        <el-button>Search</el-button>
+                        <el-button @click="getConcept">Search</el-button>
                     </template>
-                </el-input>
+                </el-autocomplete>
             </div>
         </div>
         <div class="ub-outer">
@@ -21,7 +21,8 @@
                 <h3 style="font-weight: 500;">与你类似的同学都在看</h3>
             </div>
             <div class="contents-card">
-                <el-card class="card" v-for="item in recommendlist" :key="item.name" shadow="hover" @click="addClick(item.name)">
+                <el-card class="card" v-for="item in recommendlist" :key="item.name" shadow="hover"
+                    @click="addClick(item.name)">
                     <div style="width: 100%;height: 100%; display: flex;">
                         <div class="c-left">
                             <img src="">
@@ -30,7 +31,7 @@
                             <div class="title">
                                 <h3 style="font-weight: 800; margin-bottom: 1em">{{ item.name }}</h3>
                             </div>
-                            <div  class="desc">
+                            <div class="desc">
                                 {{ item.desc }}
                             </div>
                         </div>
@@ -50,8 +51,9 @@ import * as echarts from "echarts";
 import axios from 'axios';
 let dsConcepts = [{}]
 const recommendlist = ref([])
+const searchText = ref('')
 onMounted(async () => {
-    await getAlgorithims();  
+    await getAlgorithims();
     const ubchart = document.getElementById("ub")
     if (ubchart) {
         ubchart.removeAttribute('_echarts_instance_');
@@ -66,7 +68,7 @@ const getDatastructures = async () => {
     })
 }
 
-const getAlgorithims = async()=>{
+const getAlgorithims = async () => {
     await axios.get('http://127.0.0.1:5000/api/algos').then((resp) => {
         dsConcepts = resp.data
         console.log(dsConcepts)
@@ -164,42 +166,58 @@ async function initChart1() {
 }
 
 
-const getRecommend = async()=>{
-    await axios.get('http://127.0.0.1:5000/api/recommends',{
-        params:{
-            id:1
+const getRecommend = async () => {
+    await axios.get('http://127.0.0.1:5000/api/recommends', {
+        params: {
+            id: 1
         }
-    }).then((resp)=>{
-        recommendlist.value=resp.data
+    }).then((resp) => {
+        recommendlist.value = resp.data
         console.log(resp.data)
     })
 }
-const addClick = async(item:string)=>{
+const addClick = async (item: string) => {
     console.log(item)
-    await axios.post('http://127.0.0.1:5000/api/addclick',{id:1,concept:item}).then((resp)=>{
+    await axios.post('http://127.0.0.1:5000/api/addclick', { id: 1, concept: item }).then((resp) => {
         console.log(resp.data)
     })
 }
 
-const changeToAlgos = async()=>{
+const changeToAlgos = async () => {
     await getAlgorithims()
     await initChart1()
 }
 
-const changeToDS = async()=>{
+const changeToDS = async () => {
     await getDatastructures()
     await initChart1()
 }
 
+const fetchSuggestions = (query, callback)=>{
+    const suggestions = [
+        { value: '线性表' },
+        { value: '线性代数' },
+        { value: '线性回归' },
+        { value: '非线性系统' },
+    ];
+    const results = query
+        ? suggestions.filter((item) => item.value.includes(query))
+        : [];
+    callback(results);
+}
+
+const getConcept = ()=>{
+    console.log('ok')
+}
 </script>
 
 <style scoped>
-.ub-outer{
+.ub-outer {
     display: flex;
     align-items: center;
     width: 100%;
     height: 30em;
-    background:  radial-gradient(circle, #ff7e5f, #feb47b);
+    background: radial-gradient(circle, #ff7e5f, #feb47b);
     /* background-color: #2a2a2a; */
     position: relative;
 }
@@ -254,11 +272,11 @@ const changeToDS = async()=>{
     align-items: center;
 }
 
-.bottom{
+.bottom {
     background-color: #1a1a1a;
 }
 
-.mid{
+.mid {
     width: 100%;
     height: 5em;
     display: flex;
@@ -270,9 +288,9 @@ const changeToDS = async()=>{
     font-size: 1em;
 }
 
-.left{
+.left {
     position: absolute;
-    top:0;
+    top: 0;
     width: 100%;
     height: 10%;
     z-index: 1;
@@ -281,36 +299,43 @@ const changeToDS = async()=>{
     align-items: center;
 }
 
-.selection{
+.selection {
     width: 14em;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
+    border-radius: 3em;
 }
 
-.selection:hover{
-    background-color: #1a1a1a;
+.selection:hover {
+    background-color: #feb47b;
     transition: 0.25s;
 }
 
-.rec-execise{
+.rec-execise {
     color: white;
     box-sizing: border-box;
     padding: 0 3em;
 }
 
-.desc{
+.desc {
     display: -webkit-box;
-    -webkit-box-orient: vertical; 
-    -webkit-line-clamp: 2;        /* 限制为两行 */
-    overflow: hidden;             
-    text-overflow: ellipsis;      
-    line-height: 1.5;             
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* 限制为两行 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5;
 }
 
-.c-left{
+.c-left {
     width: 3em;
+}
+
+:deep(.el-input-group__append:hover) {
+    color: #ff7e5f;
+    transition: 0.25s;
 }
 </style>

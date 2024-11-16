@@ -7,3 +7,17 @@ img,p,h1,h2,h3{
   margin: 0;
   padding: 0;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333; /* 深灰色滑块 */
+  border-radius: 10px; /* 圆角滑块 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* 浅灰色滑块 */
+}

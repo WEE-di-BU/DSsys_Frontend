@@ -15,13 +15,8 @@
       <div>
         <div v-if="isHomePage" class="login-and-register">
           <el-button plain @click="loginVisible = true">登录</el-button>
-          <el-dialog
-            v-model="loginVisible"
-            width="33em"
-            style="background-color: whitesmoke"
-          >
-            <div
-              style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <el-dialog v-model="loginVisible" width="33em" style="background-color: whitesmoke">
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <h1 style="color: black; font-size: 2em">登录</h1>
               <div style="font-size: 1em; color: #868484; margin-top: 10px">在进入系统之前，请先输入用户名和密码进行登录</div>
             </div>
@@ -31,7 +26,7 @@
                   <el-input maxlength="30" type="text" placeholder="用户名/邮箱">
                     <template #prefix>
                       <el-icon>
-                        <User/>
+                        <User />
                       </el-icon>
                     </template>
                   </el-input>
@@ -40,7 +35,7 @@
                   <el-input type="password" maxlength="20" style="margin-top: 5px" placeholder="密码">
                     <template #prefix>
                       <el-icon>
-                        <Lock/>
+                        <Lock />
                       </el-icon>
                     </template>
                   </el-input>
@@ -48,7 +43,7 @@
                 <el-row style="margin-top: 5px">
                   <el-col :span="12" style="text-align: left">
                     <el-form-item prop="remember">
-                      <el-checkbox label="记住我"/>
+                      <el-checkbox label="记住我" />
                     </el-form-item>
                   </el-col>
                   <el-col :span="12" style="text-align: right">
@@ -69,16 +64,12 @@
               </div>
             </div>
           </el-dialog>
-          <el-dialog
-            v-model="resetVisible"
-            width="33em"
-            style="background-color: whitesmoke"
-          >
+          <el-dialog v-model="resetVisible" width="33em" style="background-color: whitesmoke">
             <div style="text-align: center">
               <div style="margin-top: 1vw">
                 <el-steps :active="active" finish-status="success" align-center>
-                  <el-step title="验证电子邮件"/>
-                  <el-step title="重新设定密码"/>
+                  <el-step title="验证电子邮件" />
+                  <el-step title="重新设定密码" />
                 </el-steps>
               </div>
               <div style="margin: 0 2vw" v-if="active === 0">
@@ -92,7 +83,7 @@
                       <el-input type="email" placeholder="电子邮件地址">
                         <template #prefix>
                           <el-icon>
-                            <Message/>
+                            <Message />
                           </el-icon>
                         </template>
                       </el-input>
@@ -103,7 +94,7 @@
                           <el-input maxlength="6" type="text" placeholder="请输入验证码">
                             <template #prefix>
                               <el-icon>
-                                <EditPen/>
+                                <EditPen />
                               </el-icon>
                             </template>
                           </el-input>
@@ -132,7 +123,7 @@
                       <el-input maxlength="20" type="password" placeholder="密码">
                         <template #prefix>
                           <el-icon>
-                            <Lock/>
+                            <Lock />
                           </el-icon>
                         </template>
                       </el-input>
@@ -141,7 +132,7 @@
                       <el-input maxlength="20" type="password" placeholder="重复密码">
                         <template #prefix>
                           <el-icon>
-                            <Lock/>
+                            <Lock />
                           </el-icon>
                         </template>
                       </el-input>
@@ -156,13 +147,8 @@
           </el-dialog>
 
           <el-button type="primary" @click="registerVisible = true">注册</el-button>
-          <el-dialog
-            v-model="registerVisible"
-            width="33em"
-            style="background-color: whitesmoke"
-          >
-            <div
-              style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+          <el-dialog v-model="registerVisible" width="33em" style="background-color: whitesmoke">
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <h1 style="color: black; font-size: 2em">注册</h1>
               <div style="font-size: 1em; color: #868484; margin-top: 10px">欢迎注册我们的学习平台，请在下方填写相关信息</div>
             </div>
@@ -172,7 +158,7 @@
                   <el-input maxlength="30" type="text" placeholder="用户名/邮箱">
                     <template #prefix>
                       <el-icon>
-                        <User/>
+                        <User />
                       </el-icon>
                     </template>
                   </el-input>
@@ -181,7 +167,7 @@
                   <el-input type="password" maxlength="20" style="margin-top: 5px" placeholder="密码">
                     <template #prefix>
                       <el-icon>
-                        <Lock/>
+                        <Lock />
                       </el-icon>
                     </template>
                   </el-input>
@@ -190,7 +176,7 @@
                   <el-input type="password" maxlength="20" style="margin-top: 5px" placeholder="重复密码">
                     <template #prefix>
                       <el-icon>
-                        <Lock/>
+                        <Lock />
                       </el-icon>
                     </template>
                   </el-input>
@@ -199,7 +185,7 @@
                   <el-input type="email" placeholder="电子邮件地址">
                     <template #prefix>
                       <el-icon>
-                        <Message/>
+                        <Message />
                       </el-icon>
                     </template>
                   </el-input>
@@ -210,7 +196,7 @@
                       <el-input maxlength="6" type="text" placeholder="请输入验证码">
                         <template #prefix>
                           <el-icon>
-                            <EditPen/>
+                            <EditPen />
                           </el-icon>
                         </template>
                       </el-input>
@@ -235,9 +221,15 @@
             </div>
           </el-dialog>
         </div>
-        <div v-else class="avatar">
+        <el-dropdown v-else class="avatar" placement="bottom-end">
           <img src="./assets/avatae.png" alt="" style="border-radius: 10em; height: 100%; width: 100%;">
-        </div>
+          <template #dropdown>
+            <el-dropdown-menu style="width: 20em;">
+              <el-dropdown-item>个人信息</el-dropdown-item>
+              <el-dropdown-item style="color: red">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </header>
     <div class="main-content">
@@ -252,26 +244,26 @@ register();
 import { useRouter, useRoute } from 'vue-router';
 import { computed } from "vue";
 import { ref } from 'vue'
-import {EditPen, Lock, Message, User} from "@element-plus/icons-vue";
-import {ElMessage} from "element-plus";
-
+import { EditPen, Lock, Message, User } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
+const show = ref(false)
 const router = useRouter()
-const changeToAIChat = ()=>{
+const changeToAIChat = () => {
   router.push({
-    name:'aichat'
+    name: 'aichat'
   })
 }
-const changeToStatistics = ()=>{
+const changeToStatistics = () => {
   router.push({
     name: 'statistics'
   })
 }
-const changeToLearn = ()=>{
+const changeToLearn = () => {
   router.push({
     name: 'learn'
   })
 }
-const changeToLearn2 = ()=> {
+const changeToLearn2 = () => {
   router.push({
     name: 'learn'
   })
@@ -284,29 +276,29 @@ const isHomePage = computed(() => route.path === '/home')
 const loginVisible = ref(false)
 const registerVisible = ref(false)
 const resetVisible = ref(false)
-const changeToLogin = ()=> {
+const changeToLogin = () => {
   registerVisible.value = false
   loginVisible.value = true
   ElMessage.success('注册成功，请登录进入学习平台')
 }
-const changeToLogin2 = ()=> {
+const changeToLogin2 = () => {
   registerVisible.value = false
   loginVisible.value = true
 }
-const changeToRegister = ()=> {
+const changeToRegister = () => {
   loginVisible.value = false
   registerVisible.value = true
 }
-const changeToReset = ()=> {
+const changeToReset = () => {
   loginVisible.value = false
   resetVisible.value = true
 }
 
 const active = ref(0)
-const confirmReset = ()=> {
+const confirmReset = () => {
   active.value++
 }
-const doReset = ()=> {
+const doReset = () => {
   active.value--
   resetVisible.value = false
   loginVisible.value = true
@@ -323,13 +315,14 @@ const doReset = ()=> {
 }
 
 header {
-  height: 4em;
+  height: 3.5em;
   background-color: #282828;
   border-bottom: 1px solid black;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  position: relative;
 }
 
 .main-content {
@@ -339,7 +332,7 @@ header {
   height: calc(100vh - 4em);
 }
 
-.avatar{
+.avatar {
   height: 3em;
   width: 3em;
   border-radius: 10em;
@@ -347,7 +340,7 @@ header {
   margin-right: 3em;
 }
 
-.nav{
+.nav {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -357,7 +350,7 @@ header {
   color: #eee;
 }
 
-.nav-item{
+.nav-item {
   width: 100%;
   font-size: 0.9em;
   display: flex;
@@ -366,7 +359,7 @@ header {
   height: 100%;
 }
 
-.nav-item:hover{
+.nav-item:hover {
   background-color: gray;
   transition: 0.25s;
 }
@@ -388,4 +381,6 @@ header {
   margin-top: 1.5vw;
   padding: 0 3vw;
 }
+
+
 </style>
