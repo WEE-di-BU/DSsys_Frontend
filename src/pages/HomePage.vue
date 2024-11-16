@@ -38,15 +38,16 @@ register();
 <style scoped>
 .wrapper-home{
     width: 100%;
+    height: calc(100vh - 4em)
 }
 .bottom {
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: white;
+  background-color: #1a1a1a;
+  color: white
 }
 
 .up-title {
@@ -63,12 +64,13 @@ register();
   justify-content: space-around;
   align-items: center;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
   padding: 0 10em;
 }
 
 .item {
-  border: 1px solid #24292f;
+  border: 1px solid #eee;
   border-radius: 3em;
   height: 2.5em;
   width: 10em;

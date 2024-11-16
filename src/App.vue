@@ -336,6 +336,7 @@ header {
   width: 100%;
   box-sizing: border-box;
   background-color: #1a1a1a;
+  height: calc(100vh - 4em);
 }
 
 .avatar{

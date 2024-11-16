@@ -30,7 +30,7 @@
                             <div class="title">
                                 <h3 style="font-weight: 800; margin-bottom: 1em">{{ item.name }}</h3>
                             </div>
-                            <div class="desc">
+                            <div  class="desc">
                                 {{ item.desc }}
                             </div>
                         </div>
@@ -190,6 +190,7 @@ const changeToDS = async()=>{
     await getDatastructures()
     await initChart1()
 }
+
 </script>
 
 <style scoped>
@@ -198,7 +199,8 @@ const changeToDS = async()=>{
     align-items: center;
     width: 100%;
     height: 30em;
-    background-color: #2a2a2a;
+    background:  radial-gradient(circle, #ff7e5f, #feb47b);
+    /* background-color: #2a2a2a; */
     position: relative;
 }
 
@@ -301,10 +303,10 @@ const changeToDS = async()=>{
 
 .desc{
     display: -webkit-box;
-    -webkit-box-orient: vertical; /* 设置为垂直方向 */
+    -webkit-box-orient: vertical; 
     -webkit-line-clamp: 2;        /* 限制为两行 */
-    overflow: hidden;             /* 隐藏超出的文本 */
-    text-overflow: ellipsis;      /* 显示省略号 */
+    overflow: hidden;             
+    text-overflow: ellipsis;      
     line-height: 1.5;             
 }
 
