@@ -58,13 +58,13 @@
               </el-form>
               <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                 <div style="margin-top: 1vw">
-                  <el-button style="width: 22vw" type="success" plain>立即登录</el-button>
+                  <el-button style="width: 22vw" type="success" plain @click="changeToLearn">立即登录</el-button>
                 </div>
                 <el-divider>
                   <span style="color: grey; font-size: 0.9em;">没有账号</span>
                 </el-divider>
                 <div style="margin-bottom: 1vw">
-                  <el-button style="width: 22vw" type="warning" plain>注册账号</el-button>
+                  <el-button style="width: 22vw" type="warning" plain @click="changeToRegister">注册账号</el-button>
                 </div>
               </div>
             </div>
@@ -140,11 +140,11 @@
               </el-form>
               <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                 <div style="margin-top: 1vw">
-                  <el-button style="width: 22vw" type="warning" plain>立即注册</el-button>
+                  <el-button style="width: 22vw" type="warning" plain @click="changeToLogin">立即注册</el-button>
                 </div>
                 <div style="margin: 1vw 0">
                   <span style="font-size: 1em; line-height: 15px; color: grey">已有账号?&nbsp;&nbsp;&nbsp;</span>
-                  <el-link type="primary" style="translate: 0 -2.5px">立即登录</el-link>
+                  <el-link type="primary" style="translate: 0 -2.5px" @click="changeToLogin">立即登录</el-link>
                 </div>
               </div>
             </div>
@@ -191,6 +191,14 @@ const isHomePage = computed(() => route.path === '/home')
 
 const loginVisible = ref(false)
 const registerVisible = ref(false)
+const changeToLogin = ()=> {
+  registerVisible.value = false
+  loginVisible.value = true
+}
+const changeToRegister = ()=> {
+  loginVisible.value = false
+  registerVisible.value = true
+}
 
 </script>
 
