@@ -2,7 +2,8 @@
     <div>
         <div class="search">
             <div class="search-main">
-                <el-autocomplete v-model="searchText" :fetch-suggestions="fetchSuggestions" placeholder="Search Algorithm and DataStructure">
+                <el-autocomplete v-model="searchText" :fetch-suggestions="fetchSuggestions"
+                    placeholder="Search Algorithm and DataStructure">
                     <template #append>
                         <el-button @click="getConcept">Search</el-button>
                     </template>
@@ -108,8 +109,9 @@ async function initChart1() {
                 type: "graph",
                 focusNodeAdjacency: true,
                 force: {
-                    repulsion: 150,
-                    edgeLength: [100, 80]
+                    repulsion: 100, // 调小斥力，减少扩散范围
+                    gravity: 0.1,   // 增加引力，使节点更紧凑
+                    edgeLength: [50, 100] // 调整边的长度范围
                 },
                 layout: "force",
                 symbol: 'circle',
@@ -193,7 +195,7 @@ const changeToDS = async () => {
     await initChart1()
 }
 
-const fetchSuggestions = (query, callback)=>{
+const fetchSuggestions = (query, callback) => {
     const suggestions = [
         { value: '线性表' },
         { value: '线性代数' },
@@ -206,7 +208,7 @@ const fetchSuggestions = (query, callback)=>{
     callback(results);
 }
 
-const getConcept = ()=>{
+const getConcept = () => {
     console.log('ok')
 }
 </script>
@@ -330,9 +332,9 @@ const getConcept = ()=>{
     line-height: 1.5;
 }
 
-.c-left {
+/* .c-left {
     width: 3em;
-}
+} */
 
 :deep(.el-input-group__append:hover) {
     color: #ff7e5f;
