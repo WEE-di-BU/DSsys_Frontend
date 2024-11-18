@@ -311,6 +311,7 @@ const doReset = () => {
   height: 100vh;
   width: 100vw;
   overflow-x: hidden;
+  background-color: #1a1a1a;
 }
 
 header {

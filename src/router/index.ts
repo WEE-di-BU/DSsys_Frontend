@@ -3,6 +3,7 @@ import AIChat from '@/pages/AIChat.vue'
 import StatisticsPage from "@/pages/StatisticsPage.vue";
 import HomePage from "@/pages/HomePage.vue";
 import LearnPage from "@/pages/LearnPage.vue";
+import DetailPage from "@/pages/detail/DetailPage.vue";
 const router = createRouter({
     history:createWebHashHistory(),
     routes:[
@@ -29,6 +30,12 @@ const router = createRouter({
             name:'learn',
             path:'/learn',
             component:LearnPage
+        },
+        {
+            path: '/detail/:id',
+            name: 'detail',
+            component: DetailPage,
+            props: route => ({ id: route.params.id})
         }
     ]
 })

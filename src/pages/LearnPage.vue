@@ -5,7 +5,7 @@
                 <el-autocomplete v-model="searchText" :fetch-suggestions="fetchSuggestions"
                     placeholder="Search Algorithm and DataStructure">
                     <template #append>
-                        <el-button @click="getConcept">Search</el-button>
+                        <el-button @click="getConcept(searchText)">Search</el-button>
                     </template>
                 </el-autocomplete>
             </div>
@@ -50,9 +50,13 @@
 import { onMounted, ref } from 'vue';
 import * as echarts from "echarts";
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 let dsConcepts = [{}]
 const recommendlist = ref([])
 const searchText = ref('')
+const all_concepts = ref([])
+const inv = new Map()
+const router = useRouter()
 onMounted(async () => {
     await getAlgorithims();
     const ubchart = document.getElementById("ub")
@@ -61,6 +65,7 @@ onMounted(async () => {
     }
     await initChart1()
     await getRecommend()
+    await getAllConcepts()
 })
 const getDatastructures = async () => {
     await axios.get('http://127.0.0.1:5000/api/ds').then((resp) => {
@@ -196,20 +201,29 @@ const changeToDS = async () => {
 }
 
 const fetchSuggestions = (query, callback) => {
-    const suggestions = [
-        { value: '线性表' },
-        { value: '线性代数' },
-        { value: '线性回归' },
-        { value: '非线性系统' },
-    ];
+    const suggestions = all_concepts.value;
     const results = query
         ? suggestions.filter((item) => item.value.includes(query))
         : [];
     callback(results);
 }
 
-const getConcept = () => {
-    console.log('ok')
+const getConcept = async (searchText) => {
+    const corrId = inv.get(searchText)
+    console.log(corrId)
+    router.push({ name: 'detail', params: { id: corrId } });
+};
+
+const getAllConcepts = async()=>{
+    await axios.get('http://127.0.0.1:5000/api/concepts').then((resp)=>{
+        all_concepts.value = resp.data
+        all_concepts.value.forEach((item)=>{
+            // console.log(name,id)
+            inv.set(item.value,item.id)
+        })
+        console.log(all_concepts.value)
+        console.log(inv)
+    })
 }
 </script>
 
