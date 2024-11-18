@@ -9,7 +9,7 @@
           AI问答
         </div>
         <div class="nav-item" @click="changeToStatistics">
-          班级
+          个人中心
         </div>
       </div>
       <div>
