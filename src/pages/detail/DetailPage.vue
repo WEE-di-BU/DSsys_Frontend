@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; display: flex;justify-content: center;background: radial-gradient(circle, #ff7e5f, #feb47b);">
+  <div style="width: 100%; display: flex;justify-content: center;background: radial-gradient(circle, #ff7e5f, #feb47b)">
     <div style="width: 65%; background-color: #282828;border: none; box-sizing: border-box; padding: 2em 2em">
         <h1 style="margin-bottom: 0.5em; color: white; font-size: 2.5em;">{{ detail.name }}</h1>
         <h3 style="margin-bottom: 1em; color: white; font-style: italic;">Description</h3>
