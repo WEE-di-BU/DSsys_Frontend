@@ -2,14 +2,14 @@
   <div class="wrapper">
     <header>
       <div class="nav">
-        <div class="nav-item" @click="changeToLearn">
+        <div class="nav-item" v-show="role==0" @click="changeToLearn">
           学习
         </div>
         <div class="nav-item" @click="changeToAIChat">
           AI问答
         </div>
         <div class="nav-item" @click="changeToStatistics">
-          分析
+          班级
         </div>
       </div>
       <div>
@@ -246,7 +246,10 @@ import { computed } from "vue";
 import { ref } from 'vue'
 import { EditPen, Lock, Message, User } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { useAccountStore } from './store/accountStore';
 const router = useRouter()
+const accountStore = useAccountStore()
+const role = accountStore.role
 const changeToAIChat = () => {
   router.push({
     name: 'aichat'
@@ -263,9 +266,15 @@ const changeToLearn = () => {
   })
 }
 const changeToLearn2 = () => {
-  router.push({
-    name: 'learn'
-  })
+  if(role == 0){
+    router.push({
+      name: 'learn'
+    })
+  }else{
+    router.push({
+      name: 'aichat'
+    })
+  }
   ElMessage.success('登录成功，欢迎回来~')
 }
 

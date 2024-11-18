@@ -24,11 +24,13 @@
     "marked": "^15.0.0",
     "mavon-editor": "^2.10.4",
     "md-editor-v3": "^5.0.1",
+    "pinia": "^2.2.6",
     "prismjs": "^1.29.0",
     "r-swiper": "^1.0.82",
     "swiper": "^11.1.14",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue3typed": "^0.1.5"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",
