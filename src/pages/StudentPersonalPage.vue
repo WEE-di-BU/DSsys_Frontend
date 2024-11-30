@@ -205,7 +205,7 @@
   height: 5em;
   border: solid 2px #fff;
   border-radius: 2.5em;
-  background: url("@/assets/avatae.png");
+  background: url("@/assets/avatar.png");
 }
 
 .profile {

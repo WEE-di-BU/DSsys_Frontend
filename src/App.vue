@@ -8,9 +8,12 @@
         <div class="nav-item" @click="changeToAIChat">
           AI问答
         </div>
-        <div class="nav-item" @click="changeToStatistics">
+        <div class="nav-item" @click="changeToStudentPersonalPage">
           个人中心
         </div>
+        <!-- 由于教师和学生使用同一个系统，到时候登录操作编写应该给用户一个角色标记flag -->
+        <!-- flag为student时跳转到学生主页，为teacher时跳转到教师主页 -->
+        <div @click="changeToTeacherPersonalPage"></div>
       </div>
       <div>
         <div v-if="isHomePage" class="login-and-register">
@@ -222,7 +225,7 @@
           </el-dialog>
         </div>
         <el-dropdown v-else class="avatar" placement="bottom-end">
-          <img src="./assets/avatae.png" alt="" style="border-radius: 10em; height: 100%; width: 100%;">
+          <img src="@/assets/avatar.png" alt="" style="border-radius: 10em; height: 100%; width: 100%;">
           <template #dropdown>
             <el-dropdown-menu style="width: 20em;">
               <el-dropdown-item>个人信息</el-dropdown-item>
@@ -255,11 +258,18 @@ const changeToAIChat = () => {
     name: 'aichat'
   })
 }
-const changeToStatistics = () => {
+const changeToStudentPersonalPage = () => {
   router.push({
-    name: 'statistics'
+    name: 'studentpersonalpage'
   })
 }
+
+const changeToTeacherPersonalPage = () => {
+  router.push({
+    name: 'teacherpersonalpage'
+  })
+}
+
 const changeToLearn = () => {
   router.push({
     name: 'learn'
