@@ -5,7 +5,7 @@
                 <el-autocomplete v-model="searchText" :fetch-suggestions="fetchSuggestions"
                     placeholder="Search Algorithm and DataStructure">
                     <template #append>
-                        <el-button @click="getConcept(searchText)">Search</el-button>
+                        <el-button @click="addClick(searchText)">Search</el-button>
                     </template>
                 </el-autocomplete>
             </div>
@@ -188,6 +188,7 @@ const addClick = async (item: string) => {
     await axios.post('http://127.0.0.1:5000/api/addclick', { id: 1, concept: item }).then((resp) => {
         console.log(resp.data)
     })
+    await getConcept(item)
 }
 
 const changeToAlgos = async () => {
