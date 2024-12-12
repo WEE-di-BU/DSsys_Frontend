@@ -8,9 +8,13 @@
         <div class="nav-item" @click="changeToAIChat">
           AI问答
         </div>
-        <div class="nav-item" @click="changeToPersonalPage()">
+<!--        <div class="nav-item" @click="changeToTeacherPersonalPage">-->
+        <div class="nav-item" @click="changeToStudentPersonalPage">
           个人中心
         </div>
+        <!-- 由于教师和学生使用同一个系统，到时候登录操作编写应该给用户一个角色标记flag -->
+        <!-- flag为student时跳转到学生主页，为teacher时跳转到教师主页 -->
+        <div class="nav-item" @click="changeToTeacherPersonalPage">教师中心</div>
       </div>
       <div>
         <div v-if="isHomePage" class="login-and-register">
@@ -255,16 +259,16 @@ const changeToAIChat = () => {
     name: 'aichat'
   })
 }
-const changeToPersonalPage = () => {
-  if(role===0){
-    router.push({
-      name: 'studentpersonalpage'
-    })
-  }else{
-    router.push({
-      name: 'teacherpersonalpage'
-    })
-  }
+const changeToStudentPersonalPage = () => {
+  router.push({
+    name: 'studentpersonalpage'
+  })
+}
+
+const changeToTeacherPersonalPage = () => {
+  router.push({
+    name: 'teacherpersonalpage'
+  })
 }
 
 const changeToLearn = () => {
