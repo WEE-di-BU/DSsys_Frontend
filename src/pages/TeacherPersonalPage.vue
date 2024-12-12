@@ -327,7 +327,7 @@ fetchClasses();
 
 .classes-wrapper-title {
   display: inline-block;
-  height: 13%;
+  height: 7%;
   width: 15%;
   border-bottom: solid 0.025em;
   border-image: linear-gradient(to right, #0000001A, #f1f1f1, #0000001A) 1;
@@ -361,7 +361,7 @@ fetchClasses();
 
 
 .classes-wrapper-contents {
-  height: 85%;
+  height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
