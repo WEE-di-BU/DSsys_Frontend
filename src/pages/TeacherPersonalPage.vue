@@ -14,20 +14,12 @@
         </div>
         <div class="right-info">
           <div class="individual-data">
-            <div class="quest-count">
-              <div class="d-title">
-                发布次数
-              </div>
-              <div class="d-num">
-                6
-              </div>
-            </div>
             <div class="class-count">
               <div class="d-title">
                 班级数量
               </div>
               <div class="d-num">
-                6
+                {{ total }}
               </div>
             </div>
             <div class="learned-time">
@@ -59,14 +51,15 @@
           <el-scrollbar class="scrollbar-horizontal">
             <ul class="classes-list">
               <li class="cls" v-for="(classItem, index) in classes" :key="index">
-                <div class="cls-img"></div>
-                <div class="cls-desc">
+                <div class="cls-img" style="margin-bottom: 2em;">
+                  <img src="@/assets/cbkc.jpg" alt="" style="width: 100%; height:9em;border-radius: 1em; ">
+                </div>
+                <div class="cls-desc" @click="intoTheClass(classItem.class_id)">
                   <h2>{{ classItem.course_name }}</h2>
-                  <h2>{{ classItem.class_id }}</h2>
+                  <h4>{{ classItem.class_id }}</h4>
                   <small>云南大学</small>
                   <p>于倩</p>
-                  <h5>课程容量：{{ classItem.capacity }} 人</h5>
-                  <h5>2025年1月18日结束</h5>
+                  <h4>课程容量：{{ classItem.capacity }} 人</h4>
                 </div>
               </li>
               <li class="spacer-x"></li>
@@ -89,9 +82,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import axios from 'axios';
-
+import { useRouter } from 'vue-router';
+let total = ref(0)
 interface Course {
   class_id: string;
   course_name: string;
@@ -109,7 +103,7 @@ const classNumber1 = ref('');
 const classNumber2 = ref('');
 const user_id = ref('2');
 const role = ref('1');
-
+const teacher = ref({})
 // 打开弹出框
 const openJoinClassModal = () => {
   classNumber1.value = '';
@@ -121,6 +115,15 @@ const openJoinClassModal = () => {
 const closeJoinClassModal = () => {
   isModalVisible.value = false;
 };
+const router = useRouter();
+const intoTheClass = (val) => {
+  router.push({
+    name: 'class',
+    params: {
+      cid: val
+    }
+  })
+}
 
 // 确认创建班级
 const confirmJoinClass = async () => {
@@ -154,7 +157,7 @@ const fetchClasses = async () => {
   try {
     // 请求获取课程列表
     const response = await axios.get<ApiResponse>('http://127.0.0.1:5000/api/get_classes', {
-      params: { user_id: user_id.value,role: role.value }
+      params: { user_id: user_id.value, role: role.value }
     });
 
     console.log("API Response:", response.data);  // 打印返回的数据
@@ -166,6 +169,7 @@ const fetchClasses = async () => {
         class_id: item['c.class_id'],
         capacity: item['c.capacity'],
       }));
+      total.value = classes.value.length;  // 记录课程数量
     } else {
       console.error('返回的数据格式不正确', response.data);
       alert('返回数据格式不正确');
@@ -175,9 +179,16 @@ const fetchClasses = async () => {
     alert('网络错误，获取班级信息失败');
   }
 };
-
+const getTeacherData = async () => {
+  axios.get('http://127.0.0.1:5000/api/teacher/' + localStorage.getItem('user_id')).then((resp) => {
+    teacher.value = resp.data;
+  })
+}
 // 初始加载课程数据
-fetchClasses();
+onMounted(async()=>{
+  await getTeacherData();
+  await fetchClasses();
+})
 </script>
 
 <style lang="css" scoped>
@@ -255,21 +266,10 @@ fetchClasses();
   align-items: center;
 }
 
-.quest-count {
-  width: 33.3%;
-  height: 90%;
-  padding: 0.25em 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
 .class-count {
-  width: 33.4%;
+  width: 50%;
   height: 90%;
   padding: 0.25em 0;
-  border-left: solid 0.025em;
   border-right: solid 0.025em;
   border-image: linear-gradient(to bottom, #0000001A, #f1f1f1, #0000001A) 1;
   display: flex;
@@ -279,7 +279,7 @@ fetchClasses();
 }
 
 .learned-time {
-  width: 33.3%;
+  width: 50%;
   height: 90%;
   padding: 0.25em 0;
   display: flex;
@@ -320,7 +320,7 @@ fetchClasses();
 }
 
 .classes-info-wrapper {
-  width: 68%;
+  width: 100%;
   height: 100%;
   border-radius: 0.5em;
 }
@@ -343,7 +343,7 @@ fetchClasses();
   height: 100%;
 }
 
-.title-item-join{
+.title-item-join {
   width: 100%;
   font-size: 1em;
   color: black;
@@ -380,7 +380,8 @@ fetchClasses();
 }
 
 .scrollbar-horizontal::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.5); /* 自定义滚动条样式 */
+  background: rgba(0, 0, 0, 0.5);
+  /* 自定义滚动条样式 */
 }
 
 .classes-list {
@@ -429,9 +430,12 @@ fetchClasses();
 }
 
 .spacer-x {
-  flex-shrink: 0; /* 防止被压缩 */
-  width: 1em; /* 空白宽度 */
-  background: transparent; /* 没有背景色 */
+  flex-shrink: 0;
+  /* 防止被压缩 */
+  width: 1em;
+  /* 空白宽度 */
+  background: transparent;
+  /* 没有背景色 */
 }
 
 .collections-wrapper {
@@ -479,7 +483,8 @@ fetchClasses();
 }
 
 .scrollbar-vertical::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.5); /* 自定义滚动条样式 */
+  background: rgba(0, 0, 0, 0.5);
+  /* 自定义滚动条样式 */
 }
 
 .collections-list {
@@ -508,9 +513,12 @@ fetchClasses();
 }
 
 .spacer-y {
-  flex-shrink: 0; /* 防止被压缩 */
-  height: 0.1em; /* 空白宽度 */
-  background: transparent; /* 没有背景色 */
+  flex-shrink: 0;
+  /* 防止被压缩 */
+  height: 0.1em;
+  /* 空白宽度 */
+  background: transparent;
+  /* 没有背景色 */
   list-style-type: none;
 }
 
@@ -527,23 +535,29 @@ fetchClasses();
 
 /* 弹出框样式 */
 .modal {
-  display: block; /* 显示弹出框 */
+  display: block;
+  /* 显示弹出框 */
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: rgba(0, 0, 0, 0.9); /* 深色半透明背景 */
+  background-color: rgba(0, 0, 0, 0.9);
+  /* 深色半透明背景 */
   width: 350px;
   padding: 30px;
   border-radius: 15px;
-  z-index: 1000; /* 确保弹出框在最上层 */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* 弹出框阴影效果 */
-  transition: transform 0.3s ease, opacity 0.3s ease; /* 平滑过渡效果 */
+  z-index: 1000;
+  /* 确保弹出框在最上层 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* 弹出框阴影效果 */
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  /* 平滑过渡效果 */
 }
 
 /* 弹出框内容 */
 .modal-content {
-  background-color: #1a1a1a; /* 深灰色背景 */
+  background-color: #1a1a1a;
+  /* 深灰色背景 */
   color: white;
   padding: 30px;
   border-radius: 15px;
@@ -557,13 +571,15 @@ fetchClasses();
   top: 10px;
   right: 20px;
   font-size: 24px;
-  color: #ff8c00; /* 橙色 */
+  color: #ff8c00;
+  /* 橙色 */
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .close:hover {
-  color: #ff4500; /* 浅橙色 */
+  color: #ff4500;
+  /* 浅橙色 */
 }
 
 /* 输入框样式 */
@@ -572,23 +588,28 @@ input {
   margin: 15px 0;
   width: 90%;
   border-radius: 8px;
-  border: 2px solid #ff8c00; /* 橙色边框 */
-  background-color: #333333; /* 暗灰色背景 */
+  border: 2px solid #ff8c00;
+  /* 橙色边框 */
+  background-color: #333333;
+  /* 暗灰色背景 */
   color: white;
   font-size: 16px;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 input:focus {
-  border-color: #ff4500; /* 聚焦时浅橙色 */
-  background-color: #444444; /* 聚焦时更深的灰色 */
+  border-color: #ff4500;
+  /* 聚焦时浅橙色 */
+  background-color: #444444;
+  /* 聚焦时更深的灰色 */
   outline: none;
 }
 
 /* 按钮样式 */
 button {
   padding: 12px 25px;
-  background-color: #ff8c00; /* 橙色 */
+  background-color: #ff8c00;
+  /* 橙色 */
   color: white;
   border: none;
   border-radius: 8px;
@@ -598,12 +619,13 @@ button {
 }
 
 button:hover {
-  background-color: #ff4500; /* 鼠标悬停时变为浅橙色 */
+  background-color: #ff4500;
+  /* 鼠标悬停时变为浅橙色 */
 }
 
 /* 增加输入框和按钮的间距 */
-button, input {
+button,
+input {
   margin-top: 20px;
 }
-
 </style>

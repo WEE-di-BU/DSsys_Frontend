@@ -5,6 +5,7 @@ import HomePage from "@/pages/HomePage.vue";
 import LearnPage from "@/pages/LearnPage.vue";
 import DetailPage from "@/pages/detail/DetailPage.vue";
 import TeacherPersonalPage from "@/pages/TeacherPersonalPage.vue";
+import ClassDetail from "@/pages/detail/ClassDetail.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -43,6 +44,12 @@ const router = createRouter({
       name: 'detail',
       component: DetailPage,
       props: route => ({id: route.params.id})
+    },
+    {
+      path: '/class/:cid',
+      name: 'class',
+      component:ClassDetail,
+      props: route => ({cid:route.params.cid})
     }
   ]
 })

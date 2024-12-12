@@ -27,15 +27,7 @@
                 班级数量
               </div>
               <div class="d-num">
-                1
-              </div>
-            </div>
-            <div class="learned-time">
-              <div class="d-title">
-                收藏数量
-              </div>
-              <div class="d-num">
-                0
+                {{ total }}
               </div>
             </div>
           </div>
@@ -59,67 +51,20 @@
           <el-scrollbar class="scrollbar-horizontal">
             <ul class="classes-list">
               <li class="cls" v-for="(classItem, index) in classes" :key="index">
-                <div class="cls-img"></div>
-                <div class="cls-desc">
+                <div class="cls-img" style="margin-bottom: 2em;">
+                  <img src="@/assets/cbkc.jpg" alt="" style="width: 100%; height:9em;border-radius: 1em; ">
+                </div>
+                <div class="cls-desc" @click="intoTheClass(classItem.class_id)">
                   <h2>{{ classItem.course_name }}</h2>
-                  <h2>{{ classItem.class_id }}</h2>
+                  <h4>{{ classItem.class_id }}</h4>
                   <small>云南大学</small>
                   <p>于倩</p>
-                  <h5>课程容量：{{ classItem.capacity }} 人</h5>
-                  <h5>2025年1月18日结束</h5>
+                  <h4>课程容量：{{ classItem.capacity }} 人</h4>
                 </div>
               </li>
               <li class="spacer-x"></li>
             </ul>
           </el-scrollbar>
-        </div>
-      </div>
-      <div class="collections-wrapper">
-        <div class="collections-info">
-          <div class="collections-title">
-            收藏夹
-          </div>
-          <el-scrollbar class="scrollbar-vertical">
-            <ul class="collections-list">
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="clt">
-                算法
-              </li>
-              <li class="spacer-y"></li>
-            </ul>
-          </el-scrollbar>
-        </div>
-        <div class="other">
-          不知道放些啥
         </div>
       </div>
     </div>
@@ -138,6 +83,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from "axios";
+import { useRouter } from 'vue-router';
 
 interface Course {
   class_id: string;
@@ -150,7 +96,7 @@ interface ApiResponse {
 // 弹出框是否显示
 const isModalVisible = ref(false);
 const classes = ref<Course[]>([]);
-
+let total = ref(0);
 // 班级号
 const classNumber = ref('');
 const user_id = ref('1');
@@ -166,6 +112,16 @@ const openJoinClassModal = () => {
 const closeJoinClassModal = () => {
   isModalVisible.value = false;
 };
+
+const router = useRouter();
+const intoTheClass = (val)=>{
+  router.push({
+    name:'class',
+    params: {
+      cid: val
+    }
+  })
+}
 
 // 确认加入班级
 const confirmJoinClass = async () => {
@@ -215,6 +171,7 @@ const fetchClasses = async () => {
         class_id: item['c.class_id'],
         capacity: item['c.capacity'],
       }));
+      total.value = classes.value.length; 
     } else {
       console.error('返回的数据格式不正确', response.data);
       alert('返回数据格式不正确');
@@ -304,7 +261,7 @@ fetchClasses();
 }
 
 .quest-count {
-  width: 33.3%;
+  width: 50%;
   height: 90%;
   padding: 0.25em 0;
   display: flex;
@@ -314,11 +271,10 @@ fetchClasses();
 }
 
 .class-count {
-  width: 33.4%;
+  width: 50%;
   height: 90%;
   padding: 0.25em 0;
   border-left: solid 0.025em;
-  border-right: solid 0.025em;
   border-image: linear-gradient(to bottom, #0000001A, #f1f1f1, #0000001A) 1;
   display: flex;
   justify-content: center;
@@ -368,7 +324,7 @@ fetchClasses();
 }
 
 .classes-info-wrapper {
-  width: 68%;
+  width: 100%;
   height: 100%;
   border-radius: 0.5em;
 }
