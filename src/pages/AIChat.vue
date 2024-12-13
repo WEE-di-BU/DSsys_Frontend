@@ -5,7 +5,9 @@
             <div class="typing" style="width: 100%; font-size: 2em; color: white;text-align: center;" />
         </vuetyped>
         <div style="width: 100%; height: 100%; display: flex;justify-content: center; background-color: #0f0f11;">
-            <iframe src="http://127.0.0.1:7860/?__theme=dark" frameborder="0"
+            <!-- <iframe src="http://127.0.0.1:7860/?__theme=dark" frameborder="0"
+                style="width: 80%; height: 100%;border-radius: 0.4em;"></iframe> -->
+            <iframe src="https://486803-proxy-7860.dsw-gateway-cn-shanghai.data.aliyun.com/" frameborder="0"
                 style="width: 80%; height: 100%;border-radius: 0.4em;"></iframe>
         </div>
     </div>
