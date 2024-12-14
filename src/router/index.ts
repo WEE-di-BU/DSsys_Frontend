@@ -6,6 +6,7 @@ import LearnPage from "@/pages/LearnPage.vue";
 import DetailPage from "@/pages/detail/DetailPage.vue";
 import TeacherPersonalPage from "@/pages/TeacherPersonalPage.vue";
 import ClassDetail from "@/pages/detail/ClassDetail.vue";
+import {unauthorized} from "@/net/index.js";
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -53,5 +54,18 @@ const router = createRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const isUnauthorized = unauthorized();
+  if (to.name === 'home' && !isUnauthorized) {
+    next('/learn');
+    return;
+  }
+  if (isUnauthorized && to.name !== 'home') {
+    next('/home');
+    return;
+  }
+  next();
+});
 
 export default router
