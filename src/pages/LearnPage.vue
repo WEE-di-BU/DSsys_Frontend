@@ -40,7 +40,10 @@
                 </el-card>
             </div>
             <div class="rec-execise">
-                <h3 style="font-weight: 500;"> 推荐练习 </h3>
+                <h3 style="font-weight: 500;margin-bottom: 2vw"> 推荐练习 </h3>
+                <div>
+                  <LeetcodePage />
+                </div>
             </div>
         </div>
     </div>
@@ -51,12 +54,15 @@ import { onMounted, ref } from 'vue';
 import * as echarts from "echarts";
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import LeetcodePage from "@/pages/detail/LeetcodePage.vue";
+
 let dsConcepts = [{}]
 const recommendlist = ref([])
 const searchText = ref('')
 const all_concepts = ref([])
 const inv = new Map()
 const router = useRouter()
+
 onMounted(async () => {
     await getAlgorithims();
     const ubchart = document.getElementById("ub")
