@@ -58,7 +58,7 @@
                   <h2>{{ classItem.course_name }}</h2>
                   <h4>{{ classItem.class_id }}</h4>
                   <small>云南大学</small>
-                  <p>于倩</p>
+                  <p>{{ classItem.teacherName }}</p>
                   <h4>课程容量：{{ classItem.capacity }} 人</h4>
                 </div>
               </li>
@@ -89,6 +89,7 @@ interface Course {
   class_id: string;
   course_name: string;
   capacity: string;
+  teacherName: string;
 }
 interface ApiResponse {
   data: Course[];
@@ -97,10 +98,11 @@ interface ApiResponse {
 const isModalVisible = ref(false);
 const classes = ref<Course[]>([]);
 let total = ref(0);
+
 // 班级号
 const classNumber = ref('');
-const user_id = ref('1');
-const role = ref('0');
+const user_id = JSON.parse(sessionStorage.getItem('access_token')).id;
+const role = JSON.parse(sessionStorage.getItem('access_token')).role;
 
 // 打开弹出框
 const openJoinClassModal = () => {
@@ -129,8 +131,8 @@ const confirmJoinClass = async () => {
     try {
       // 向后端发送POST请求，加入班级
       const response = await axios.post('http://127.0.0.1:5000/api/join_class', {
-        user_id: user_id.value,
-        role: role.value,
+        user_id: user_id,
+        role: role,
         class_id: classNumber.value,
       });
 
@@ -159,7 +161,7 @@ const fetchClasses = async () => {
   try {
     // 请求获取课程列表
     const response = await axios.get<ApiResponse>('http://127.0.0.1:5000/api/get_classes', {
-      params: { user_id: user_id.value ,role: role.value}
+      params: { user_id: user_id, role: role}
     });
 
     console.log("API Response:", response.data);  // 打印返回的数据
@@ -170,8 +172,9 @@ const fetchClasses = async () => {
         course_name: item['c.course_name'],
         class_id: item['c.class_id'],
         capacity: item['c.capacity'],
+        teacherName: item['owner.name'],
       }));
-      total.value = classes.value.length; 
+      total.value = classes.value.length;
     } else {
       console.error('返回的数据格式不正确', response.data);
       alert('返回数据格式不正确');

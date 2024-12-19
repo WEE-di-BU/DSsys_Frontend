@@ -58,7 +58,7 @@
                   <h2>{{ classItem.course_name }}</h2>
                   <h4>{{ classItem.class_id }}</h4>
                   <small>云南大学</small>
-                  <p>于倩</p>
+                  <p>{{ teacherName }}</p>
                   <h4>课程容量：{{ classItem.capacity }} 人</h4>
                 </div>
               </li>
@@ -98,11 +98,13 @@ interface ApiResponse {
 const isModalVisible = ref(false);
 const classes = ref<Course[]>([]);
 
+const teacherName = JSON.parse(sessionStorage.getItem('access_token')).username;
+
 // 班级号
 const classNumber1 = ref('');
 const classNumber2 = ref('');
-const user_id = ref('2');
-const role = ref('1');
+const user_id = JSON.parse(sessionStorage.getItem('access_token')).id;
+const role = JSON.parse(sessionStorage.getItem('access_token')).role;
 const teacher = ref({})
 // 打开弹出框
 const openJoinClassModal = () => {
@@ -131,8 +133,8 @@ const confirmJoinClass = async () => {
     try {
       // 向后端发送POST请求，创建班级
       const response = await axios.post('http://127.0.0.1:5000/api/create_class', {
-        user_id: user_id.value,
-        role: role.value,
+        user_id: user_id,
+        role: role,
         course_name: classNumber1.value,
         capacity: classNumber2.value,
       });
@@ -140,7 +142,7 @@ const confirmJoinClass = async () => {
       if (response.data.class_id) {
         alert(`班级创建成功，班级号为: ${response.data.class_id}`);
         closeJoinClassModal();
-        fetchClasses();
+        await fetchClasses();
       } else {
         alert('班级创建失败');
       }
@@ -152,12 +154,13 @@ const confirmJoinClass = async () => {
     alert('请输入课程信息');
   }
 };
+
 // 获取课程列表
 const fetchClasses = async () => {
   try {
     // 请求获取课程列表
     const response = await axios.get<ApiResponse>('http://127.0.0.1:5000/api/get_classes', {
-      params: { user_id: user_id.value, role: role.value }
+      params: { user_id: user_id, role: role }
     });
 
     console.log("API Response:", response.data);  // 打印返回的数据
@@ -179,6 +182,7 @@ const fetchClasses = async () => {
     alert('网络错误，获取班级信息失败');
   }
 };
+
 const getTeacherData = async () => {
   axios.get('http://127.0.0.1:5000/api/teacher/' + localStorage.getItem('user_id')).then((resp) => {
     teacher.value = resp.data;
