@@ -55,17 +55,17 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const isUnauthorized = unauthorized();
-  if (to.name === 'home' && !isUnauthorized) {
-    next('/learn');
-    return;
-  }
-  if (isUnauthorized && to.name !== 'home') {
-    next('/home');
-    return;
-  }
-  next();
-});
+// router.beforeEach((to, from, next) => {
+//   const isUnauthorized = unauthorized();
+//   if (to.name === 'home' && !isUnauthorized) {
+//     next('/learn');
+//     return;
+//   }
+//   if (isUnauthorized && to.name !== 'home') {
+//     next('/home');
+//     return;
+//   }
+//   next();
+// });
 
 export default router
