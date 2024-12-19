@@ -2,13 +2,13 @@
   <div class="wrapper">
     <header>
       <div class="nav">
-        <div class="nav-item" v-show="role==0" @click="changeToLearn">
+        <div class="nav-item" v-show="role==='student'" @click="changeToLearn">
           学习
         </div>
         <div class="nav-item" @click="changeToAIChat">
           AI问答
         </div>
-<!--        <div class="nav-item" @click="changeToTeacherPersonalPage">-->
+        <!--        <div class="nav-item" @click="changeToTeacherPersonalPage">-->
         <div class="nav-item" @click="changeToStudentPersonalPage">
           个人中心
         </div>
@@ -26,7 +26,9 @@
           >
             <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <h1 style="color: black; font-size: 2em">登录</h1>
-              <div style="font-size: 1em; color: #868484; margin-top: 10px">在进入系统之前，请先输入用户名和密码进行登录</div>
+              <div style="font-size: 1em; color: #868484; margin-top: 10px">
+                在进入系统之前，请先输入用户名和密码进行登录
+              </div>
             </div>
             <div class="input-wrapper">
               <el-form :model="login_form" :rules="login_rules" ref="formRef">
@@ -40,7 +42,8 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                  <el-input v-model="login_form.password" type="password" maxlength="20" style="margin-top: 5px" placeholder="密码">
+                  <el-input v-model="login_form.password" type="password" maxlength="20" style="margin-top: 5px"
+                            placeholder="密码">
                     <template #prefix>
                       <el-icon>
                         <Lock/>
@@ -112,7 +115,8 @@
                           </el-input>
                         </el-col>
                         <el-col :span="5">
-                          <el-button @click="reset_askCode" :disabled="!reset_isEmailValid || reset_coldTime > 0" type="success">
+                          <el-button @click="reset_askCode" :disabled="!reset_isEmailValid || reset_coldTime > 0"
+                                     type="success">
                             {{ reset_coldTime > 0 ? `请稍后 ${reset_coldTime} 秒` : '获取验证码' }}
                           </el-button>
                         </el-col>
@@ -141,7 +145,8 @@
                       </el-input>
                     </el-form-item>
                     <el-form-item prop="password_repeat">
-                      <el-input v-model="reset_form.password_repeat" maxlength="20" type="password" placeholder="重复密码">
+                      <el-input v-model="reset_form.password_repeat" maxlength="20" type="password"
+                                placeholder="重复密码">
                         <template #prefix>
                           <el-icon>
                             <Lock/>
@@ -167,7 +172,9 @@
             <div
               style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
               <h1 style="color: black; font-size: 2em">注册</h1>
-              <div style="font-size: 1em; color: #868484; margin-top: 10px">欢迎注册Medi-Insight网站，请在下方填写相关信息</div>
+              <div style="font-size: 1em; color: #868484; margin-top: 10px">
+                欢迎注册Medi-Insight网站，请在下方填写相关信息
+              </div>
             </div>
             <div class="input-wrapper">
               <el-form :model="register_form" :rules="register_rules" ref="register_formRef">
@@ -181,7 +188,8 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                  <el-input v-model="register_form.password" type="password" maxlength="20" style="margin-top: 5px" placeholder="密码">
+                  <el-input v-model="register_form.password" type="password" maxlength="20" style="margin-top: 5px"
+                            placeholder="密码">
                     <template #prefix>
                       <el-icon>
                         <Lock/>
@@ -190,7 +198,8 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password_repeat">
-                  <el-input v-model="register_form.password_repeat" type="password" maxlength="20" style="margin-top: 5px" placeholder="重复密码">
+                  <el-input v-model="register_form.password_repeat" type="password" maxlength="20"
+                            style="margin-top: 5px" placeholder="重复密码">
                     <template #prefix>
                       <el-icon>
                         <Lock/>
@@ -256,19 +265,19 @@
 </template>
 
 <script lang="ts" setup>
-import { register } from 'swiper/element/bundle';
+import {register} from 'swiper/element/bundle';
+
 register();
-import { useRouter, useRoute } from 'vue-router';
-import {computed, reactive} from "vue";
-import { ref } from 'vue'
-import { EditPen, Lock, Message, User } from "@element-plus/icons-vue";
-import { ElMessage } from "element-plus";
-import { useAccountStore } from './store/accountStore';
+import {useRouter, useRoute} from 'vue-router';
+import {computed, reactive, onMounted, onUnmounted} from "vue";
+import {ref} from 'vue'
+import {EditPen, Lock, Message, User} from "@element-plus/icons-vue";
+import {ElMessage} from "element-plus";
 import {login, get, post, logout} from "@/net/index.js";
+import axios from 'axios'
 
 const router = useRouter()
-const accountStore = useAccountStore()
-const role = accountStore.role
+
 const changeToAIChat = () => {
   router.push({
     name: 'aichat'
@@ -312,10 +321,11 @@ const login_rules = {
   ]
 }
 
-const userLogin = ()=> {
+const userLogin = () => {
   formRef.value.validate((isValid) => {
     if (isValid) {
       login(login_form.username, login_form.password, login_form.remember, () => {
+        retrieveAuthData()
         router.push('/learn')
       })
     }
@@ -375,7 +385,7 @@ const register_rules = {
   ]
 }
 
-const askCode =() => {
+const askCode = () => {
   if (isEmailValid) {
     coldTime.value = 60
     get(`http://localhost:8088/auth/ask-code?email=${register_form.email}&type=register`, () => {
@@ -397,7 +407,7 @@ const askCode =() => {
 
 const isEmailValid = computed(() => /^[\w.-]+@[\w.-]+\.\w+$/.test(register_form.email))
 
-const register2 =() => {
+const register2 = () => {
   register_formRef.value.validate((isValid) => {
     if (isValid) {
       post('http://localhost:8088/auth/register', {...register_form}, () => {
@@ -451,7 +461,7 @@ const reset_rules = {
   ],
 }
 
-const reset_askCode =() => {
+const reset_askCode = () => {
   if (reset_isEmailValid) {
     reset_coldTime.value = 60
     get(`http://localhost:8088/auth/ask-code?email=${reset_form.email}&type=reset`, () => {
@@ -471,7 +481,7 @@ const reset_askCode =() => {
   }
 }
 
-const confirmReset =() => {
+const confirmReset = () => {
   reset_formRef.value.validate((isValid) => {
     if (isValid) {
       post('http://localhost:8088/auth/reset-confirm', {
@@ -482,7 +492,7 @@ const confirmReset =() => {
   })
 }
 
-const doReset =() => {
+const doReset = () => {
   reset_formRef.value.validate((isValid) => {
     if (isValid) {
       post('http://localhost:8088/auth/reset-password', {...reset_form}, () => {
@@ -497,15 +507,15 @@ const doReset =() => {
 const loginVisible = ref(false)
 const registerVisible = ref(false)
 const resetVisible = ref(false)
-const changeToLogin2 = ()=> {
+const changeToLogin2 = () => {
   registerVisible.value = false
   loginVisible.value = true
 }
-const changeToRegister = ()=> {
+const changeToRegister = () => {
   loginVisible.value = false
   registerVisible.value = true
 }
-const changeToReset = ()=> {
+const changeToReset = () => {
   loginVisible.value = false
   resetVisible.value = true
 }
@@ -513,6 +523,85 @@ const changeToReset = ()=> {
 const userLogout = () => {
   logout(() => router.push('/home'))
 };
+
+// ==================取data========================
+const authItemName = 'access_token'
+
+interface AuthData {
+  token: string
+  expire: string
+  username: string
+  id: string
+  role: string
+}
+
+const authData = ref<AuthData | null>(null)
+let role = null
+
+const retrieveAuthData = async () => {
+  let storedData = localStorage.getItem(authItemName)
+  if (!storedData) {
+    storedData = sessionStorage.getItem(authItemName)
+  }
+
+  if (storedData) {
+    try {
+      const parsedData: AuthData = JSON.parse(storedData)
+      authData.value = parsedData
+      console.log('用户ID:', parsedData.id)
+      console.log('用户名:', parsedData.username)
+      console.log('角色:', parsedData.role)
+      role = parsedData.role
+
+      // POST 请求到后端
+      try {
+        const response = await axios.post('http://127.0.0.1:5000/create_user_node', {
+          id: parsedData.id,
+          username: parsedData.username,
+          role: parsedData.role,
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+            // 如果需要授权头，可以在这里添加
+            // 'Authorization': `Bearer ${parsedData.token}`
+          }
+        })
+
+        // 处理成功响应
+        console.log('用户节点创建成功:', response.data.message)
+        // ElMessage.success('用户节点创建成功')
+
+      } catch (error: any) {
+        if (error.response) {
+          console.error('服务器错误:', error.response.data.error)
+          ElMessage.error(`服务器错误: ${error.response.data.error}`)
+        } else if (error.request) {
+          console.error('无响应:', error.request)
+          ElMessage.error('无响应，请检查网络连接。')
+        } else {
+          console.error('请求错误:', error.message)
+          ElMessage.error(`请求错误: ${error.message}`)
+        }
+      }
+
+    } catch (error) {
+      console.error('解析认证数据失败:', error)
+      ElMessage.error('解析认证数据失败')
+      authData.value = null
+    }
+  } else {
+    authData.value = null
+  }
+}
+
+onMounted(() => {
+  retrieveAuthData()
+  window.addEventListener('user-logged-in', userLogin)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('user-logged-in', userLogout)
+})
 
 </script>
 
