@@ -6,6 +6,7 @@ import LearnPage from "@/pages/LearnPage.vue";
 import DetailPage from "@/pages/detail/DetailPage.vue";
 import TeacherPersonalPage from "@/pages/TeacherPersonalPage.vue";
 import ClassDetail from "@/pages/detail/ClassDetail.vue";
+import AdministratorPage from "@/pages/AdministratorPage.vue";
 import {unauthorized} from "@/net/index.js";
 
 const router = createRouter({
@@ -51,6 +52,11 @@ const router = createRouter({
       name: 'class',
       component:ClassDetail,
       props: route => ({cid:route.params.cid})
+    },
+    {
+      path: '/administratorpage',
+      name: 'administratorpage',
+      component: AdministratorPage,
     }
   ]
 })
