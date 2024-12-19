@@ -11,10 +11,12 @@
           <span class="concept-name">{{ concept.concept_name }}</span>
         </div>
         <h3 style="margin-bottom: 1vw; margin-top: 2vw;">推荐符合你学习情况的习题，请点击：</h3>
-        <div v-for="(matchedCName, index) in matchedCNames" :key="index" class="matched-cname-item" :style="'margin-bottom:1vw'">
-          <span class="matched-cname" @click="selectTag(matchedCName['Matched CNames'])">
+        <div class="matched-cname-container">
+          <div v-for="(matchedCName, index) in matchedCNames" :key="index" class="matched-cname-item">
+            <span class="matched-cname" @click="selectTag(matchedCName['Matched CNames'])">
             {{ matchedCName['Matched CNames'] }}
-          </span>
+            </span>
+          </div>
         </div>
       </div>
       <div class="pagination" style="height:2.4vw;">
@@ -295,10 +297,10 @@ export default {
       }
     },
     async selectTag(tag) {
-      this.selectedTag = tag; // 更新当前选中的标签
-      this.showTags = false; // 关闭标签下拉菜单
-      this.selectedDifficulty = ""; // 重置难度选择
-      this.showDifficulty = false; // 关闭难度下拉菜单
+      this.selectedTag = tag;
+      this.showTags = false;
+      this.selectedDifficulty = "";
+      this.showDifficulty = false;
 
       if (tag === "全部") {
         // 如果点击的是“全部”标签，恢复缓存的题目列表
@@ -314,11 +316,11 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ CName: tag }), // 传递标签名称
+          body: JSON.stringify({ CName: tag }),
         });
         const data = await response.json();
-        this.problems = data.exercises || []; // 更新题目列表，确保处理空数据
-        this.currentPage = 1; // 重置当前页为第一页
+        this.problems = data.exercises || [];
+        this.currentPage = 1;
       } catch (error) {
         console.error("Error fetching tag exercises:", error);
       }
@@ -402,7 +404,7 @@ export default {
       }
     },
     async handleSearch() {
-      console.log("handleSearch triggered"); // 调试日志
+      console.log("handleSearch triggered");
 
       // 重置标签栏和难度栏
       this.selectedTag = "";
@@ -587,24 +589,24 @@ export default {
 .difficulty-option {
   padding: 1vw;
   cursor: pointer;
-  background-color: #666; /* 浅灰色背景 */
+  background-color: #666;
   color: white;
 }
 
 .difficulty-option:hover {
-  background-color: #ff6600; /* 橙色背景 */
+  background-color: #ff6600;
 }
 
 .easy {
-  color: #78b903;  /* 绿色 */
+  color: #78b903;
 }
 
 .medium {
-  color: #d9c846;  /* 黄色 */
+  color: #d9c846;
 }
 
 .hard {
-  color: #d73a2f;  /* 红色 */
+  color: #d73a2f;
 }
 
 .all{
@@ -620,11 +622,11 @@ export default {
 
 .search-input {
   padding: 0.6vw 1vw;
-  border: 0.1vw solid #ff6600; /* 橙色边框 */
+  border: 0.1vw solid #ff6600;
   border-radius: 0.5vw;
   margin-left: 0.5vw;
   width: 15vw;
-  background-color: #555; /* 浅灰色背景 */
+  background-color: #555;
   color: white;
 }
 
@@ -636,7 +638,7 @@ export default {
 
 .problem-item {
   display: flex;
-  justify-content: space-between; /* 左右对齐 */
+  justify-content: space-between;
   align-items: center;
   padding: 1vw 0;
   border-bottom: 0.1vw solid #666;
@@ -644,13 +646,13 @@ export default {
 
 .problem-left {
   display: flex;
-  align-items: center; /* 垂直居中 */
+  align-items: center;
 }
 
 .problem-number {
   color: white;
   font-size: 1vw;
-  margin-right: 1vw; /* 增加编号与题目之间的间距 */
+  margin-right: 1vw;
 }
 
 .problem-text {
@@ -666,19 +668,19 @@ export default {
 .problem-level {
   font-size: 1vw;
   font-weight: bold;
-  margin-left: auto; /* 难度靠右对齐 */
+  margin-left: auto;
 }
 
 .easy {
-  color: #78b903;  /* 绿色 */
+  color: #78b903;
 }
 
 .medium {
-  color: #d9c846;  /* 黄色 */
+  color: #d9c846;
 }
 
 .hard {
-  color: #d73a2f;  /* 红色 */
+  color: #d73a2f;
 }
 
 .all {
@@ -688,15 +690,15 @@ export default {
 /* 分页样式 */
 .pagination {
   display: flex;
-  justify-content: center;  /* 左对齐 */
+  justify-content: center;
   padding: 1vw;
-  overflow-x: auto;  /* 水平滚动 */
-  white-space: nowrap;  /* 防止换行 */
-  border-top: 0.1vw solid #666;  /* 添加顶部边框 */
+  overflow-x: auto;
+  white-space: nowrap;
+  border-top: 0.1vw solid #666;
 }
 
 .pagination button {
-  margin: 0 0.2vw;  /* 减少按钮之间的间距 */
+  margin: 0 0.2vw;
   padding: 0.5vw 1vw;
   background-color: #666;
   color: white;
@@ -736,12 +738,27 @@ export default {
   font-size: 16px;
 }
 
+.matched-cname-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1vw;
+}
+
 .matched-cname-item {
-  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .matched-cname {
-  color: orange; /* 将显示的内容改为橙色 */
+  background-color: #ff6600;
+  color: white;
+  padding: 0.1vw 1vw;
+  border-radius: 0.5vw;
+  cursor: pointer;
+  font-size: 0.8vw;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
+
+
 </style>
