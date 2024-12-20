@@ -7,7 +7,7 @@
             <div class="avatar"></div>
           </div>
           <div class="profile">
-            <h2 style="color: white">👸🏻</h2>
+            <h2 style="color: white">{{ username }}</h2>
             <small style="color: white">教师</small>
             <p style="color: white; font-size: 13px">文房四宝 理堂丁珍</p>
           </div>
@@ -105,6 +105,7 @@ const classNumber1 = ref('');
 const classNumber2 = ref('');
 const user_id = JSON.parse(sessionStorage.getItem('access_token')).id;
 const role = JSON.parse(sessionStorage.getItem('access_token')).role;
+const username = JSON.parse(sessionStorage.getItem('access_token')).username;
 const teacher = ref({})
 // 打开弹出框
 const openJoinClassModal = () => {
@@ -119,6 +120,7 @@ const closeJoinClassModal = () => {
 };
 const router = useRouter();
 const intoTheClass = (val) => {
+  console.log("Class ID:", val);
   router.push({
     name: 'class',
     params: {
@@ -183,15 +185,15 @@ const fetchClasses = async () => {
   }
 };
 
-const getTeacherData = async () => {
-  axios.get('http://127.0.0.1:5000/api/teacher/' + localStorage.getItem('user_id')).then((resp) => {
-    teacher.value = resp.data;
-  })
-}
+// const getTeacherData = async () => {
+//   axios.get('http://127.0.0.1:5000/api/teacher/' + localStorage.getItem('user_id')).then((resp) => {
+//     teacher.value = resp.data;
+//   })
+// }
 
 // 初始加载课程数据
 onMounted(async()=>{
-  await getTeacherData();
+  // await getTeacherData();
   await fetchClasses();
 })
 </script>

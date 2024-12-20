@@ -7,7 +7,7 @@
             <div class="avatar"></div>
           </div>
           <div class="profile">
-            <h2 style="color: white">XXX</h2>
+            <h2 style="color: white">{{ user_name }}</h2>
             <small style="color: white">学生</small>
             <p style="color: white; font-size: 13px">人疯枪马又着急</p>
           </div>
@@ -103,6 +103,7 @@ let total = ref(0);
 const classNumber = ref('');
 const user_id = JSON.parse(sessionStorage.getItem('access_token')).id;
 const role = JSON.parse(sessionStorage.getItem('access_token')).role;
+const user_name = JSON.parse(sessionStorage.getItem('access_token')).username;
 
 // 打开弹出框
 const openJoinClassModal = () => {

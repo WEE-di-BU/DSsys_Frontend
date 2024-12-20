@@ -178,20 +178,22 @@ async function initChart1() {
     };
 }
 
+let id_ = JSON.parse(sessionStorage.getItem('access_token')).id;
 
 const getRecommend = async () => {
     await axios.get('http://127.0.0.1:5000/api/recommends', {
         params: {
-            id: 1
+            id: id_
         }
     }).then((resp) => {
         recommendlist.value = resp.data
         console.log(resp.data)
     })
 }
+
 const addClick = async (item: string) => {
     console.log(item)
-    await axios.post('http://127.0.0.1:5000/api/addclick', { id: 1, concept: item }).then((resp) => {
+    await axios.post('http://127.0.0.1:5000/api/addclick', { id: id_, concept: item }).then((resp) => {
         console.log(resp.data)
     })
     await getConcept(item)
