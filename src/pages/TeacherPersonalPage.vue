@@ -50,11 +50,11 @@
         <div class="classes-wrapper-contents">
           <el-scrollbar class="scrollbar-horizontal">
             <ul class="classes-list">
-              <li class="cls" v-for="(classItem, index) in classes" :key="index">
+              <li class="cls" v-for="(classItem, index) in classes" :key="index" @click="intoTheClass(classItem.class_id)">
                 <div class="cls-img" style="margin-bottom: 2em;">
                   <img src="@/assets/cbkc.jpg" alt="" style="width: 100%; height:9em;border-radius: 1em; ">
                 </div>
-                <div class="cls-desc" @click="intoTheClass(classItem.class_id)">
+                <div class="cls-desc">
                   <h2>{{ classItem.course_name }}</h2>
                   <h4>{{ classItem.class_id }}</h4>
                   <small>云南大学</small>
@@ -188,6 +188,7 @@ const getTeacherData = async () => {
     teacher.value = resp.data;
   })
 }
+
 // 初始加载课程数据
 onMounted(async()=>{
   await getTeacherData();
