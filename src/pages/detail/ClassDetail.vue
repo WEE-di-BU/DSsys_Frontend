@@ -13,13 +13,13 @@
           <!-- 学生列表 -->
           <div v-for="(student, index) in students" :key="index" class="student-item">
             <span class="student-index">{{ index + 1 }}</span>
-            <span class="student-name">{{ student.stu_name }}</span>
+            <span class="student-name">{{ student.name }}</span>
             <div class="progress-wrapper">
               <el-progress
                 :text-inside="true"
                 :stroke-width="22"
-                :percentage="student.click_num"
-                :status="getProgressStatus(student.click_num)"
+                :percentage="student.click_count"
+                :status="getProgressStatus(student.click_count)"
               ></el-progress>
             </div>
           </div>
@@ -55,8 +55,11 @@ const getProgressStatus = (percentage: number) => {
 // 请求后端API，获取学生列表数据
 const fetchStudents = async () => {
   try {
-    const response = await axios.get(`/api/class/${props.cid}`);
-    students.value = response.data; // 将获取到的数据赋值给 students
+    const response = await axios.post('http://127.0.0.1:5000/api/findStudents', {
+      classID: props.cid
+    });
+    students.value = response.data;
+    console.log("xxxxxx:", props.cid);
   } catch (error) {
     console.error('获取学生列表失败:', error);
   }

@@ -12,7 +12,7 @@
     </div>
     <div class="bottom">
       <div class="up-title">
-        基于GraphRag的问答系统
+        基于知识图谱的数据结构与算法课程智能学习平台
       </div>
       <div class="pages">
         <div class="item">

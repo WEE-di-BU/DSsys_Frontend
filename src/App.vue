@@ -2,19 +2,33 @@
   <div class="wrapper">
     <header>
       <div class="nav">
-        <div class="nav-item" v-show="role==='student'" @click="changeToLearn">
+        <div class="nav-item"
+             v-show="role==='student' || $route.name === 'home'"
+             @click="changeToLearn">
           学习
         </div>
-        <div class="nav-item" @click="changeToAIChat">
+        <div class="nav-item"
+             v-show="role!='admin' || $route.name === 'home'"
+             @click="changeToAIChat">
           AI问答
         </div>
-        <!--        <div class="nav-item" @click="changeToTeacherPersonalPage">-->
-        <div class="nav-item" @click="changeToStudentPersonalPage">
+        <div class="nav-item"
+             v-show="role==='student' || $route.name === 'home'"
+             @click="changeToStudentPersonalPage">
           个人中心
         </div>
         <!-- 由于教师和学生使用同一个系统，到时候登录操作编写应该给用户一个角色标记flag -->
         <!-- flag为student时跳转到学生主页，为teacher时跳转到教师主页 -->
-        <div class="nav-item" @click="changeToTeacherPersonalPage">教师中心</div>
+        <div class="nav-item"
+             v-show="role==='teacher'"
+             @click="changeToTeacherPersonalPage">
+          教师中心
+        </div>
+        <div class="nav-item"
+             v-show="role==='admin'"
+             @click="changeToAdministratorPersonalPage">
+          教师管理
+        </div>
       </div>
       <div>
         <div v-if="isHomePage" class="login-and-register">
@@ -295,6 +309,12 @@ const changeToTeacherPersonalPage = () => {
   })
 }
 
+const changeToAdministratorPersonalPage = () => {
+  router.push({
+    name: 'administratorpage'
+  })
+}
+
 const changeToLearn = () => {
   router.push({
     name: 'learn'
@@ -324,9 +344,16 @@ const login_rules = {
 const userLogin = () => {
   formRef.value.validate((isValid) => {
     if (isValid) {
-      login(login_form.username, login_form.password, login_form.remember, () => {
+      login(login_form.username, login_form.password, login_form.remember, (data) => {
         retrieveAuthData()
-        router.push('/learn')
+
+        if (data.role === 'student') {
+          router.push({name: 'learn'})
+        } else if (data.role === 'teacher') {
+          router.push({name: 'teacherpersonalpage'})
+        } else {
+          router.push({name: 'administratorpage'})
+        }
       })
     }
   });
@@ -521,6 +548,7 @@ const changeToReset = () => {
 }
 
 const userLogout = () => {
+  role = ''
   logout(() => router.push('/home'))
 };
 

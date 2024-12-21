@@ -1,114 +1,97 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { ElMessage } from "element-plus";
 import axios from 'axios';
 
-interface Teacher {
-  username: string;
-  email: string;
-}
-
-interface ApiResponse {
-  data: Teacher[];
-}
-
-const teachers = ref<Teacher[]>([]);
 const username = ref('');
 const email = ref('');
-// 弹出框是否显示
 const isModalVisible = ref(false);
 
-// 打开弹出框
 const openAddTeacherModal = () => {
   username.value = '';
   email.value = '';
   isModalVisible.value = true;
 };
 
-// 关闭弹出框
 const closeAddTeacherModal = () => {
   isModalVisible.value = false;
 };
 
-// 获取所有教师信息
-const showTeachers = async () => {
-  try {
-    const response = await axios.get<ApiResponse>('http://127.0.0.1:5000/api/admin/get-teachers');
-    console.log("API Response:", response.data);  // 打印返回的数据
-
-    // 确保返回的数据是一个数组
-    if (Array.isArray(response.data)) {
-      teachers.value = response.data.map(item => ({
-        username: item['t.username'],
-        email: item['t.email'],
-      }));
-    } else {
-      console.error('返回的数据格式不正确', response.data);
-      alert('返回数据格式不正确');
-    }
-  } catch (error) {
-    console.error('Error fetching teachers:', error);
-    alert('网络错误，获取教师信息失败');
-  }
+interface TeacherInfo {
+  id: number
+  username: string
+  email: string
+  registerTime: string
 }
 
-// 添加新教师
-const confirmAddTeacher = async () => {
-  if (username.value && email.value) {
-    try {
-      // 向后端发送POST请求，添加教师
-      await axios.post('http://127.0.0.1:5000/api/admin/add-teacher', {
-        username: username.value,
-        email: email.value,
-      });
+let teacherLists = ref<TeacherInfo[]>([]);
 
-      // 新增教师后，刷新教师列表
-      showTeachers();  // 重新获取并渲染教师列表
-      username.value = ''; // 清空输入框
-      email.value = '';    // 清空输入框
-    } catch (error) {
-      console.error('Error creating class:', error);
-      alert('网络错误，教师添加失败');
-    }
-  } else {
-    alert('请输入教师信息');
+const getAllTeachers = async () => {
+  try {
+    const token = JSON.parse(sessionStorage.getItem('access_token')).token;
+    const { data } = await axios.get<TeacherInfo[]>("http://localhost:8088/api/admin/get-teachers", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    teacherLists.value = data;
+    console.log("token为：", token);
+    console.log("教师列表数据：", teacherLists.value);
+  } catch (e) {
+    console.error("获取教师列表失败：", e);
+    ElMessage.error("获取教师列表失败！");
   }
 };
 
-// 页面加载时获取所有教师信息
 onMounted(() => {
-  showTeachers();
-});
+  getAllTeachers();
+})
+
+const confirmAddTeacher = async () => {
+  if (username.value && email.value) {
+    try {
+      const token = JSON.parse(sessionStorage.getItem('access_token')).token;
+      await axios.post('http://localhost:8088/api/admin/add-teacher', {
+        username: username.value,
+        email: email.value,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await getAllTeachers();
+      username.value = '';
+      email.value = '';
+      ElMessage.success('教师添加成功！');
+    } catch (error) {
+      console.error('教师添加失败:', error);
+      ElMessage.error('教师添加失败');
+    }
+  } else {
+    ElMessage.warning('请输入教师信息');
+  }
+};
 </script>
 
 <template>
-  <div class="contents">
-    <!-- 教师信息列表 -->
-    <div class="title-line">
-      <h3 style="margin-bottom: 10px;">教师列表</h3>
-      <button class="title-item-join" @click="openAddTeacherModal">+添加教师</button>
+  <div style="width: 100%; display: flex;justify-content: center;background: radial-gradient(circle, #ff7e5f, #feb47b)">
+    <div style="width: 65%; background-color: #282828;border: none; box-sizing: border-box; padding: 2em 2em">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin-bottom: 10px; color: #eeeeee">教师列表</h3>
+        <el-button type="warning" @click="openAddTeacherModal">+ 添加老师</el-button>
+      </div>
+      <el-table :data="teacherLists" style="width: 100%" height="550"
+                :header-cell-style="{ backgroundColor: '#282828', color: '#fff' }"
+                :cell-style="{ backgroundColor: '#282828', color: '#fff' }"
+                :row-style="{ height: '60px' }"
+      >
+        <el-table-column prop="id" label="ID" />
+        <el-table-column prop="username" label="Name" />
+        <el-table-column prop="email" label="Email" />
+        <el-table-column prop="registerTime" label="Register Time" />
+      </el-table>
     </div>
-    <table border="1" cellpadding="5" cellspacing="0" style="width: 60%; margin-bottom: 20px;">
-      <thead>
-      <tr>
-        <th>用户名</th>
-        <th>邮箱</th>
-      </tr>
-      </thead>
-      <tbody>
-      <!-- 表格样式  -->
-      <tr>
-        <td>111</td>
-        <td>123@com</td>
-      </tr>
-      <tr v-for="(teacher, index) in teachers" :key="index">
-        <td>{{ teacher.username }}</td>
-        <td>{{ teacher.email }}</td>
-      </tr>
-      </tbody>
-    </table>
   </div>
-
-  <!-- 弹出框 -->
   <div v-if="isModalVisible" class="modal">
     <div class="modal-content">
       <span class="close" @click="closeAddTeacherModal">&times;</span>
@@ -121,57 +104,14 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.contents {
-  color: white;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 10px;
-  margin-top: 10px;
+.el-table {
+  background-color: #282828;
 }
-
-table {
-  border-collapse: collapse;
-  width: 100%;
+.el-table__body-wrapper {
+  background-color: #282828;
 }
-
-th, td {
-  padding: 8px;
-  text-align: left;
-}
-
-form {
-  margin-top: 20px;
-}
-
-label {
-  margin-right: 10px;
-}
-
-.title-line{
-  width: 60%;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  align-items: center;
-}
-
-.title-item-join {
-  width: 16%;
-  font-size: 1em;
-  color: black;
-  background-color: #feb47b;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: 10px 0;
-}
-
-.title-item:hover {
-  background-color: gray;
-  transition: 0.25s;
+.el-table__empty-block {
+  background-color: #282828;
 }
 
 /* 弹出框样式 */
