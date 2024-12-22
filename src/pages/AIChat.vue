@@ -1,7 +1,7 @@
 <template>
     <div style="width: 100%;display: flex;align-items: center;flex-direction: column; height: 100%; ">
-        <!-- <vuetyped :strings="['欢迎回来，需要我帮您做什么？']" :smart-backspace="true"
-            style="width: 100%; box-sizing: border-box;padding: 1em 0; background-color: #0f0f11;">
+        <!-- <vuetyped :strings="['欢迎回
+         g: border-box;padding: 1em 0; background-color: #0f0f11;">
             <div class="typing" style="width: 100%; font-size: 2em; color: white;text-align: center;" />
         </vuetyped> -->
         <div style="width: 100%; height: 100%; display: flex;justify-content: center; background-color: #0f0f11;">

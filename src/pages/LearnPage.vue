@@ -178,7 +178,7 @@ async function initChart1() {
     };
 }
 
-let id_ = JSON.parse(sessionStorage.getItem('access_token')).id;
+const id_ = JSON.parse(sessionStorage.getItem('access_token')).id;
 
 const getRecommend = async () => {
     await axios.get('http://127.0.0.1:5000/api/recommends', {
